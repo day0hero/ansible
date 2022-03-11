@@ -13,6 +13,13 @@
   hostname:
     name: "{{ inventory_hostname }}"
 
+- name: "[preflight] - rhsm - Register to the CDN"
+  redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    auto_attach: true
+
 - name: "[preflight] - Install iproute-tc package"
   package:
     name: iproute-tc
