@@ -1,7 +1,0 @@
----
-- name: "[rhsm] - Register to the CDN"
-  redhat_subscription:
-    state: present
-    username: "{{ rhsm_username }}"
-    password: "{{ rhsm_password }}"
-    auto_attach: true
