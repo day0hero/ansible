@@ -1,0 +1,15 @@
+- name: "[k8s deployment] - Register to RedHat CDN"
+  import_tasks: subscription-manager.yml
+
+- name: "[k8s deployment] - Preflight Configuration"
+  import_tasks: preflight.yml
+
+- name: "[k8s deployment] - k8s nodes preflight configurations"
+  import_tasks: k8s-preflight.yml
+
+- name: "[k8s deployment] - k8s controlplane initialization"
+  import_tasks: k8s-controlplane-bootstrap.yml
+  when: inventory_hostname in groups['controlplane']
+
+- name: "[k8s deployment] - k8s controlplane initialization"
+  import_tasks: k8s-worker-bootsrap.yml

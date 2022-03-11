@@ -1,0 +1,2 @@
+- name: Un-Register nodes from Red Hat CDN
+  import_tasks: unregister.yml
