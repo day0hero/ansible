@@ -1,4 +1,4 @@
 ---
-- name: "Un-register {{ inventory_hostname }} from the Red Hat Customer Portal"
+- name: "Un-register nodes from the Red Hat Customer Portal"
   redhat_subscription:
     state: absent
