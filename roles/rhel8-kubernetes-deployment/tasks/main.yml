@@ -1,6 +1,3 @@
-- name: "[k8s deployment] - Register to RedHat CDN"
-  import_tasks: subscription-manager.yml
-
 - name: "[k8s deployment] - Preflight Configuration"
   import_tasks: preflight.yml
 
