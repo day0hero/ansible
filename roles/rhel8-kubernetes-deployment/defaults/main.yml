@@ -1,4 +1,4 @@
-rhsm_username: ##Enter your red hat customer portal username
-rhsm_password: ##Enter your red hat customer portal password
+rhsm_username: rhn-jrickard
+rhsm_password: 'V@d3rL!ves'
 k8s_version: 1.23
 k8s_pod_network_cidr: 10.222.0.0/16
