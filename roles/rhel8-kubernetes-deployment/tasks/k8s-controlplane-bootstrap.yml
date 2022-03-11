@@ -8,16 +8,17 @@
 - name: "[k8s-bootstrap] - create directory for kubeconfig"
   file:
     state: directory
-    path: /root/.kube
-    owner: root
-    group: root
+    path: "{{ ansible_user_dir }}/.kube"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
     mode: '0755'
+  delegate_to: "{{ inventory_hostname }}"
 
 - name: "[k8s-bootstrap] - Copy kubeconfig to created directory"
   copy:
     remote_src: yes
     src: /etc/kubernetes/admin.conf
-    dest: /root/.kube/config
+    dest: "{{ ansible_user_dir }}/.kube/config"
     mode: '0640'
 
 - name: "[k8s-bootstrap] - Download calico manifests"
