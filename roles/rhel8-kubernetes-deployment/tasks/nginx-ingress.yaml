@@ -1,0 +1,11 @@
+---
+- name: "[nginx-ingress] - install - Download Manifests"
+  get_url:
+    url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.0/deploy/static/provider/cloud/deploy.yaml
+    dest: /tmp/ingress-deploy.yaml
+    mode: '0644'
+
+- name: "[nginx-ingress] - install - Apply the manifests"
+  kubernetes.core.k8s:
+    state: present
+    src: /tmp/ingress-deploy.yaml
