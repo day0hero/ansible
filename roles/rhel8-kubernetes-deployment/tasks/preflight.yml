@@ -71,6 +71,8 @@
     - 30000-32767/tcp
     - 6443/tcp
     - 2379-2380/tcp
+    - 443/tcp
+    - 80/tcp
 
 - name: "[preflight] - Install python3-pip on controlplane"
   package:
