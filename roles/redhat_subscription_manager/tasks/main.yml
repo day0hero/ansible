@@ -4,4 +4,4 @@
 
 - name: Un-Register nodes from Red Hat CDN
   import_tasks: unregister.yml
-  tags: never, unregister
+  tags: unregister
