@@ -23,6 +23,8 @@
           - google-chrome-stable
           - chrome-gnome-shell
           - redhat-display-fonts
+          - redhat-text-fonts
+          - gnome-tweaks
 
     - name: create symlink for /snap directory
       become: true
