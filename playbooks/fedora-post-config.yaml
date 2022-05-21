@@ -1,0 +1,105 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Local Machine Configurator
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: tune DNF to perform better than default
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/dnf/dnf.conf
+        line: "{{ item }}"
+      loop:
+        - fastestmirror=True
+        - max_parallel_downloads=10
+
+    - name: install some packages
+      become: true
+      ansible.builtin.package:
+        name:
+          - vim
+          - gedit
+          - snapd
+          - google-chrome-stable
+          - chrome-gnome-shell
+          - redhat-display-fonts
+
+    - name: create symlink for /snap directory
+      become: true
+      ansible.builtin.file:
+        src: /var/lib/snapd/snap/
+        dest: /snap
+        owner: root
+        group: root
+        state: link
+
+    - name: install snap applications
+      become: true
+      community.general.snap:
+        name:
+          - drawio
+          - slack
+        state: present
+
+    - name: install vsCode with classic option
+      become: true
+      community.general.snap:
+        name: code
+        classic: yes
+        state: present
+
+    - name: install pip packages
+      ansible.builtin.pip:
+        name: "{{ item }}"
+        state: present
+        extra_args: "--user --upgrade"
+      loop:
+        - botocore
+        - boto3
+        - awscli
+
+    - name: install upstream release of go
+      become: true
+      ansible.builtin.unarchive:
+        src: https://go.dev/dl/go1.17.10.linux-amd64.tar.gz
+        remote_src: yes
+        dest: /usr/local/bin
+        creates: /usr/local/bin/go/bin
+
+    - name: add line into bashrc to pick up go installation
+      ansible.builtin.lineinfile:
+        path: "{{lookup('env', 'HOME')}}/.bashrc"
+        line: "export PATH=$PATH:/usr/local/bin/go/bin"
+
+    - name: create a .vimrc with the right stuff in it
+      ansible.builtin.copy:
+        dest: "{{lookup('env', 'HOME')}}/.vimrc"
+        content: "setlocal ts=2 sts=2 sw=2 expandtab ai"
+
+    - name: create github cli yum repository
+      become: true
+      ansible.builtin.yum_repository:
+        baseurl: https://cli.github.com/packages/rpm
+        gpgkey: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xc99b11deb97541f0
+        enabled: true
+        description: "packages for GitHub CLI"
+        name: gh-cli
+
+    - name: install github cli client
+      become: true
+      ansible.builtin.package:
+        name: gh
+        state: present
+
+    - name: remove the opensc package
+      become: true
+      ansible.builtin.package:
+        name:
+          - opensc
+        state: absent
+
+    - name: update the everything
+      become: true
+      ansible.builtin.package:
+        name: '*'
+        state: latest
