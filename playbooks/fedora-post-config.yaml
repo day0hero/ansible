@@ -68,10 +68,18 @@
         dest: /usr/local/bin
         creates: /usr/local/bin/go/bin
 
-    - name: add line into bashrc to pick up go installation
-      ansible.builtin.lineinfile:
-        path: "{{lookup('env', 'HOME')}}/.bashrc"
-        line: "export PATH=$PATH:/usr/local/bin/go/bin"
+#    - name: add line into bashrc to pick up go installation
+#      ansible.builtin.lineinfile:
+#        path: "{{lookup('env', 'HOME')}}/.bashrc"
+#        line: "export PATH=$PATH:/usr/local/bin/go/bin"
+
+    - name: update bashrc with paths, vars and aliases
+      ansible.builtin.blockinfile:
+        path: "{{lookup('ENV', 'HOME')}}.bashrc"
+        block: |
+          "export PATH=$PATH:/usr/local/bin/go/bin"
+          "export EDITOR=/usr/bin/vim"
+          "export PS1='[\u@\h]\w% '"
 
     - name: create a .vimrc with the right stuff in it
       ansible.builtin.copy:
@@ -100,8 +108,16 @@
           - opensc
         state: absent
 
+    - name: enable wayland support for gdm 
+      become: true
+      ansible.builtin.replace:
+        path: /etc/gdm/custom.conf
+        regexp: ^#WaylandEnable=false
+        replace: WaylandEnable=false
+
     - name: update the everything
       become: true
       ansible.builtin.package:
         name: '*'
         state: latest
+
